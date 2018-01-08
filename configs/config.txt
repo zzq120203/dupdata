@@ -1,0 +1,16 @@
+
+#MPP JDBC
+mppDriver=cn.ac.iie.jdbc.DBrokerI.DBrokerDriver
+mppUrl=jdbc.iie.DBroker://10.144.16.18:21811,10.144.16.19:21811,10.144.16.20:21811/msg_db;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=mppserver
+mppUser=zzq
+mppPwd=zzq
+
+#oracle JDBC
+oracleDriver=oracle.jdbc.driver.OracleDriver
+oracleUrl=jdbc:oracle:thin:@(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = 10.144.16.60)(PORT = 1521))(ADDRESS = (PROTOCOL = TCP)(HOST=10.144.16.61)(PORT = 1521))(LOAD_BALANCE = yes)(FAILOVER = ON)(CONNECT_DATA =(SERVER = DEDICATED)(SERVICE_NAME = meta)))
+oracleUser=wx
+oraclePwd=wxbxgs
+
+#redis
+redisUrl=STA://10.144.32.33:16379
+redisAuthToken=helloGana
