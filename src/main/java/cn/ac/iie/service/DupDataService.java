@@ -24,9 +24,10 @@ public class DupDataService {
     public static void main(String[] args) {
 
         try {
-            PropertyConfigurator.configure(System.getProperty("log4j.configuration"));//启动脚本，jvm启动参数，-Dargument=XXXXX
-            ConfLoading.init(Config.class, System.getProperty("config"));//Config类成员变量赋值
-
+            //PropertyConfigurator.configure(System.getProperty("log4j.configuration"));//启动脚本，jvm启动参数，-Dargument=XXXXX
+            //ConfLoading.init(Config.class, System.getProperty("config"));//Config类成员变量赋值
+            PropertyConfigurator.configure("configs/log4j.properties");
+            ConfLoading.init(Config.class, "configs/config.txt");
             Thread surveilKW = new Thread(new SurveilKeywordInfoMaintaining(), "SurveilKeywordInfoMaintaining");
             surveilKW.start();
 

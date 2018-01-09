@@ -33,9 +33,13 @@ public class FaceUpData implements WorkHandler<DupData>, LifecycleAware {
                 jedis = rpp.rpL1.getResource();
                 if (jedis != null) {
                     String face = jedis.hget("F" + data.getSet(), data.getAesKey());
-                    String[] faces = face.split("@");
-                    DBUtils.updateMppFaceFromKey(faces[0], Integer.parseInt(faces[1]), data.getU_ch_id(), data.getM_chat_room(), data.getM_ch_id());
-                    log.info("Face ====>> face:{}; key:{}@{}", face, data.getSet(), data.getAesKey());
+                    if (face != null) {
+                        String[] faces = face.split("@");
+                        DBUtils.updateMppFaceFromKey(faces[0], Integer.parseInt(faces[1]), data.getU_ch_id(), data.getM_chat_room(), data.getM_ch_id());
+                        log.info("Face ====>> face:{}; key:{}@{}", face, data.getSet(), data.getAesKey());
+                    } else {
+                        log.error("Face ====>> face:{}; key:{}@{}", null, data.getSet(), data.getAesKey());
+                    }
                 }
             }
         } catch (Exception e) {
@@ -44,6 +48,7 @@ public class FaceUpData implements WorkHandler<DupData>, LifecycleAware {
             rpp.rpL1.putInstance(jedis);
         }
     }
+
     @Override
     public void onStart() {
         final Thread currentThread = Thread.currentThread();

@@ -38,8 +38,8 @@ public class MainMMData implements Runnable {
         long seq = 0;
         DupData dupData;
         String[] tags = {"i", "v"};
-        try {
-            do {
+        do {
+            try {
                 jedis = rpp.rpL1.getResource();
                 if (jedis != null) {
                     Date date = new Date();
@@ -62,21 +62,24 @@ public class MainMMData implements Runnable {
                                 } finally {
                                     ringBuffer.publish(seq);
                                 }
+                                log.info(dupData.toString());
                             }
                         }
                     } while (info != null);
                 }
-            } while (startGetMainMMData.get());
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        } finally {
-            rpp.rpL1.putInstance(jedis);
-            try {
-                Thread.sleep(5 * 1000);
-            } catch (InterruptedException e) {
+
+
+            } catch (Exception e) {
                 log.error(e.getMessage(), e);
+            } finally {
+                rpp.rpL1.putInstance(jedis);
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException e) {
+                    log.error(e.getMessage(), e);
+                }
             }
-        }
+        } while (startGetMainMMData.get());
     }
 
     public static void main(String[] args) {

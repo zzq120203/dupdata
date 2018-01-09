@@ -26,4 +26,6 @@ dependencies {
     compile group: 'redis.clients', name: 'jedis', version: '2.9.0'
     // https://mvnrepository.com/artifact/com.lmax/disruptor
     compile group: 'com.lmax', name: 'disruptor', version: '3.3.7'
+    // https://mvnrepository.com/artifact/com.oracle/ojdbc6
+    compile group: 'com.oracle', name: 'ojdbc6', version: '11.2.0.4.0'
 }

@@ -14,3 +14,6 @@ oraclePwd=wxbxgs
 #redis
 redisUrl=STA://10.144.32.33:16379
 redisAuthToken=helloGana
+
+textUpData=true
+faceUpData=false

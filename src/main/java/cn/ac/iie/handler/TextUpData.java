@@ -33,8 +33,12 @@ public class TextUpData implements WorkHandler<DupData>, LifecycleAware {
                 jedis = rpp.rpL1.getResource();
                 if (jedis != null) {
                     String text = jedis.hget("T" + data.getSet(), data.getAesKey());
-                    DBUtils.updateMPPTextFromKey(text, data.getU_ch_id(), data.getM_chat_room(), data.getM_ch_id());
-                    log.info("Text ====>> text:{}; key:{}@{}", text, data.getSet(), data.getAesKey());
+                    if (text != null) {
+                        DBUtils.updateMPPTextFromKey(text, data.getU_ch_id(), data.getM_chat_room(), data.getM_ch_id());
+                        log.info("Text ====>> text:{}; key:{}@{}", text, data.getSet(), data.getAesKey());
+                    } else {
+                        log.error("Text ====>> text:{}; key:{}@{}", null, data.getSet(), data.getAesKey());
+                    }
                 }
             }
         } catch (Exception e) {
