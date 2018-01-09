@@ -45,36 +45,38 @@ public class MainMMData implements Runnable {
                     Date date = new Date();
                     long ts = Timestamp.valueOf(getTimeLong(date)).getTime() / 1000;
                     String info = null;
-                    do {
-                        for (String tag : tags) {
-                            info = jedis.lpop(tag + ts);
-                            if (info != null) {
-                                String[] infos = info.split(",");
-                                try {
-                                    seq = ringBuffer.next();
-                                    dupData = ringBuffer.get(seq);
-                                    dupData.resetAllFields();
-                                    dupData.setSet(tag + ts);
-                                    dupData.setAesKey(infos[0]);
-                                    dupData.setU_ch_id(Long.parseLong(infos[1]));
-                                    dupData.setM_chat_room(Long.parseLong(infos[2]));
-                                    dupData.setM_ch_id(infos[3]);
-                                } finally {
-                                    ringBuffer.publish(seq);
+                    for (int i = 0; i > -86401; i -= 86400) {
+                        ts += i;
+                        do {
+                            for (String tag : tags) {
+                                info = jedis.lpop(tag + ts);
+                                if (info != null) {
+                                    String[] infos = info.split(",");
+                                    try {
+                                        seq = ringBuffer.next();
+                                        dupData = ringBuffer.get(seq);
+                                        dupData.resetAllFields();
+                                        dupData.setSet(tag + ts);
+                                        dupData.setAesKey(infos[0]);
+                                        dupData.setU_ch_id(Long.parseLong(infos[1]));
+                                        dupData.setM_chat_room(Long.parseLong(infos[2]));
+                                        dupData.setM_ch_id(infos[3]);
+                                    } finally {
+                                        ringBuffer.publish(seq);
+                                    }
+                                    log.info(dupData.toString());
                                 }
-                                log.info(dupData.toString());
                             }
-                        }
-                    } while (info != null);
+                        } while (info != null);
+                    }
                 }
-
 
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             } finally {
                 rpp.rpL1.putInstance(jedis);
                 try {
-                    Thread.sleep(5 * 1000);
+                    Thread.sleep(10 * 1000);
                 } catch (InterruptedException e) {
                     log.error(e.getMessage(), e);
                 }

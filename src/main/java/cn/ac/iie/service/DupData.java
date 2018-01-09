@@ -8,6 +8,8 @@ public class DupData {
     private long m_chat_room;
     private String m_ch_id;
 
+    private boolean OK;
+
     public DupData() {
     }
 
@@ -51,6 +53,14 @@ public class DupData {
         this.m_ch_id = m_ch_id;
     }
 
+    public boolean isOK() {
+        return OK;
+    }
+
+    public void setOK(boolean OK) {
+        this.OK = OK;
+    }
+
     @Override
     public String toString() {
         return "DupData{" +
@@ -59,6 +69,7 @@ public class DupData {
                 ", u_ch_id=" + u_ch_id +
                 ", m_chat_room=" + m_chat_room +
                 ", m_ch_id='" + m_ch_id + '\'' +
+                ", OK=" + OK +
                 '}';
     }
 
@@ -68,5 +79,6 @@ public class DupData {
         this.u_ch_id = 0;
         this.m_chat_room = 0;
         this.m_ch_id = null;
+        this.OK = false;
     }
 }

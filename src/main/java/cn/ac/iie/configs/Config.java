@@ -42,4 +42,7 @@ public class Config {
     @FieldMeta(isOptional = false, desc = "更新人脸")
     public static boolean faceUpData;
 
+    @FieldMeta(isOptional = false, desc = "是否判断")
+    public static boolean endHandler;
+
 }

@@ -3,6 +3,7 @@ package cn.ac.iie.service;
 import cn.ac.iie.common.RPoolProxy;
 import cn.ac.iie.configs.ConfLoading;
 import cn.ac.iie.configs.Config;
+import cn.ac.iie.handler.End;
 import cn.ac.iie.handler.FaceUpData;
 import cn.ac.iie.handler.TextUpData;
 import cn.ac.iie.tools.kw.SurveilKeywordInfoMaintaining;
@@ -44,7 +45,8 @@ public class DupDataService {
                     ProducerType.MULTI, new BlockingWaitStrategy());
 
             disruptor.handleEventsWithWorkerPool(new TextUpData(rpp))
-                    .thenHandleEventsWithWorkerPool(new FaceUpData(rpp));
+                    .thenHandleEventsWithWorkerPool(new FaceUpData(rpp))
+                    .thenHandleEventsWithWorkerPool(new End(rpp));
 
             RingBuffer<DupData> ringBuffer = disruptor.start();
 

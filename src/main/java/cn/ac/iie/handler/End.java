@@ -3,7 +3,6 @@ package cn.ac.iie.handler;
 import cn.ac.iie.common.RPoolProxy;
 import cn.ac.iie.configs.Config;
 import cn.ac.iie.service.DupData;
-import cn.ac.iie.tools.DBUtils;
 import com.lmax.disruptor.LifecycleAware;
 import com.lmax.disruptor.WorkHandler;
 import org.slf4j.Logger;
@@ -12,16 +11,16 @@ import redis.clients.jedis.Jedis;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TextUpData implements WorkHandler<DupData>, LifecycleAware {
+public class End implements WorkHandler<DupData>, LifecycleAware {
     private static Logger log = LoggerFactory.getLogger(TextUpData.class);
 
     private String oldName;
-    private final String name = "TextUpData-";
+    private final String name = "End-";
     private static AtomicInteger threadId = new AtomicInteger(0);
 
     private RPoolProxy rpp = null;
 
-    public TextUpData(RPoolProxy rpp) {
+    public End(RPoolProxy rpp) {
         this.rpp = rpp;
     }
 
@@ -29,17 +28,16 @@ public class TextUpData implements WorkHandler<DupData>, LifecycleAware {
     public void onEvent(DupData data) throws Exception {
         Jedis jedis = null;
         try {
-            if (Config.textUpData) {
-                jedis = rpp.rpL1.getResource();
-                if (jedis != null) {
-                    String text = jedis.hget("T" + data.getSet(), data.getAesKey());
-                    if (text != null) {
-                        DBUtils.updateMPPTextFromKey(text, data.getU_ch_id(), data.getM_chat_room(), data.getM_ch_id());
-                        log.info("Text ====>> text:{}; key:{}@{}", text, data.getSet(), data.getAesKey());
-                        data.setOK(true);
-                    } else {
-                        log.debug("Text ====>> text:{}; key:{}@{}", null, data.getSet(), data.getAesKey());
+            if (Config.endHandler) {
+                if (!data.isOK()) {
+                    jedis = rpp.rpL1.getResource();
+                    if (jedis != null) {
+                        jedis.rpush(data.getSet(), data.getAesKey()
+                                + "," + data.getU_ch_id()
+                                + "," + data.getM_chat_room()
+                                + "," + data.getM_ch_id());
                     }
+                    log.info("End ====>> key:{}@{} is not insert mms", data.getSet(), data.getAesKey());
                 }
             }
         } catch (Exception e) {
@@ -48,6 +46,7 @@ public class TextUpData implements WorkHandler<DupData>, LifecycleAware {
             rpp.rpL1.putInstance(jedis);
         }
     }
+
     @Override
     public void onStart() {
         final Thread currentThread = Thread.currentThread();
@@ -59,4 +58,5 @@ public class TextUpData implements WorkHandler<DupData>, LifecycleAware {
     public void onShutdown() {
         Thread.currentThread().setName(oldName);
     }
+
 }

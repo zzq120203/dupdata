@@ -38,7 +38,7 @@ public class FaceUpData implements WorkHandler<DupData>, LifecycleAware {
                         DBUtils.updateMppFaceFromKey(faces[0], Integer.parseInt(faces[1]), data.getU_ch_id(), data.getM_chat_room(), data.getM_ch_id());
                         log.info("Face ====>> face:{}; key:{}@{}", face, data.getSet(), data.getAesKey());
                     } else {
-                        log.error("Face ====>> face:{}; key:{}@{}", null, data.getSet(), data.getAesKey());
+                        log.debug("Face ====>> face:{}; key:{}@{}", null, data.getSet(), data.getAesKey());
                     }
                 }
             }
