@@ -67,7 +67,10 @@ public class MainMMData implements Runnable {
                                     log.info(dupData.toString());
                                 }
                             }
-                        } while (info != null);
+                            if (!startGetMainMMData.get() || info == null) {
+                                break;
+                            }
+                        } while (true);
                     }
                 }
 
@@ -76,7 +79,7 @@ public class MainMMData implements Runnable {
             } finally {
                 rpp.rpL1.putInstance(jedis);
                 try {
-                    Thread.sleep(10 * 1000);
+                    Thread.sleep(30 * 1000);
                 } catch (InterruptedException e) {
                     log.error(e.getMessage(), e);
                 }

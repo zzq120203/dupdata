@@ -12,7 +12,7 @@ import redis.clients.jedis.Jedis;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class End implements WorkHandler<DupData>, LifecycleAware {
-    private static Logger log = LoggerFactory.getLogger(TextUpData.class);
+    private static Logger log = LoggerFactory.getLogger(End.class);
 
     private String oldName;
     private final String name = "End-";
@@ -37,7 +37,7 @@ public class End implements WorkHandler<DupData>, LifecycleAware {
                                 + "," + data.getM_chat_room()
                                 + "," + data.getM_ch_id());
                     }
-                    log.info("End ====>> key:{}@{} is not insert mms", data.getSet(), data.getAesKey());
+                    log.debug("End ====>> key:{}@{} is not insert mms", data.getSet(), data.getAesKey());
                 }
             }
         } catch (Exception e) {

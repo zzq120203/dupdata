@@ -34,8 +34,10 @@ public class FaceUpData implements WorkHandler<DupData>, LifecycleAware {
                 if (jedis != null) {
                     String face = jedis.hget("F" + data.getSet(), data.getAesKey());
                     if (face != null) {
-                        String[] faces = face.split("@");
-                        DBUtils.updateMppFaceFromKey(faces[0], Integer.parseInt(faces[1]), data.getU_ch_id(), data.getM_chat_room(), data.getM_ch_id());
+                        if (!"0".equals(face)) {
+                            String[] faces = face.split("@");
+                            DBUtils.updateMppFaceFromKey(faces[0], Integer.parseInt(faces[1]), data.getU_ch_id(), data.getM_chat_room(), data.getM_ch_id());
+                        }
                         log.info("Face ====>> face:{}; key:{}@{}", face, data.getSet(), data.getAesKey());
                     } else {
                         log.debug("Face ====>> face:{}; key:{}@{}", null, data.getSet(), data.getAesKey());
