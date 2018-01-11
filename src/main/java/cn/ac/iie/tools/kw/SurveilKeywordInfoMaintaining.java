@@ -10,9 +10,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SurveilKeywordInfoMaintaining implements Runnable {
     private static Logger log = LoggerFactory.getLogger(SurveilKeywordInfoMaintaining.class);
+
+    private static AtomicBoolean init = new AtomicBoolean(false);
 
     private long lastMaxTimeStamp = 0L;
     private long lastRecordCounter = 0L;
@@ -22,6 +25,11 @@ public class SurveilKeywordInfoMaintaining implements Runnable {
 
     private String checkUpdate = "select count(*) as counter, max(t.r_update_time) as maxdate "
             + " from t_rule t, t_topic t_p, t_theme t_th where t.rule_type=0 and t.tp_id=t_p.tp_id and t_p.tp_t_id=t_th.t_id and t_p.tp_status>0 and t.r_status>0 and t_th.t_status>0";
+
+
+    public static boolean isInit() {
+        return init.get();
+    }
 
     @Override
     public void run() {
@@ -79,7 +87,8 @@ public class SurveilKeywordInfoMaintaining implements Runnable {
                     }
                     KeywordFilterHandler.setLSTMap(map, ruleIdToZhutiid, ruleIdToZhuantiid);
                 }
-
+                if (!init.get())
+                    init.set(true);
 
             } catch (SQLException e) {
                 try {
